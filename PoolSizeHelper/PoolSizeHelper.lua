@@ -1,5 +1,5 @@
 local addonName, Addon = ...
-
+local prefix = "["..addonName.."]"
 local f = CreateFrame("Frame")
 
 f:SetScript("OnEvent", function(self, event, ...)
@@ -8,8 +8,8 @@ end)
 
 f:RegisterEvent("ADDON_LOADED")
 
-function f:ADDON_LOADED(event, loadedAddon)
-    if loadedAddon == addonName  then
+function f:ADDON_LOADED(_, loadedAddon)
+    if loadedAddon == addonName then
         self:UnregisterEvent("ADDON_LOADED")
         if type(DB) ~= "table" then
             DB = {}
@@ -74,18 +74,18 @@ function f:PLAYER_ENTERING_WORLD()
     if DB.name then
         SendChatMessage("inv", "WHISPER", nil, DB.name)
     else
-        print("[PoolSizeHelper] Type /pool <username for invite>")
+        print(prefix, "Type /pool <username for invite>")
     end
     SetPVP(1)
 end
 
-SLASH_POOLSIZEHELPER1 = "/pool"
-SlashCmdList["POOLSIZEHELPER"] = function(input)
+_G["SLASH_"..prefix:upper().."1"] = "/pool"
+SlashCmdList[prefix:upper()] = function(input)
     if not input then
-        print("[PoolSizeHelper] usage: /pool <username for invite>")
+        print(prefix, "usage: /pool <username for invite>")
         return
     end
     DB.name = input
-    print("[PoolSizeHelper] Auto send 'inv' on", input, "set")
+    print(prefix, "Auto send 'inv' on", input, "set")
     SendChatMessage("inv", "WHISPER", nil, DB.name)
 end
