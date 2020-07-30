@@ -8,4 +8,4 @@
 
 ## Usage
 
-Type /pool <username for invite>
+Type /pool \<username for invite\>
