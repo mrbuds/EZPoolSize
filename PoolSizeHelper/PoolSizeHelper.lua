@@ -19,6 +19,7 @@ function f:ADDON_LOADED(event, loadedAddon)
             self:RegisterEvent("GOSSIP_SHOW")
             self:RegisterEvent("PLAYER_DEAD")
             self:RegisterEvent("PLAYER_ENTERING_WORLD")
+            self:RegisterEvent("PLAYER_PVP_KILLS_CHANGED")
 
             hooksecurefunc("StaticPopup_Show", function(sType)
 				if sType == "DEATH" then
@@ -56,6 +57,17 @@ function f:GOSSIP_SHOW()
     C_Timer.After(0.4, function()
         StaticPopup_OnClick(StaticPopup1, 1)
     end)
+end
+
+local now
+function f:PLAYER_PVP_KILLS_CHANGED()
+    if not now or now ~= GetTime() then
+        local current = GetPVPSessionStats()
+        if current and tonumber(current) then
+            print(current, "kills")
+            now = GetTime()
+        end
+    end
 end
 
 function f:PLAYER_ENTERING_WORLD()
