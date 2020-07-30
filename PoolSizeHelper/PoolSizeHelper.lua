@@ -87,4 +87,5 @@ SlashCmdList["POOLSIZEHELPER"] = function(input)
     end
     DB.name = input
     print("[PoolSizeHelper] Auto send 'inv' on", input, "set")
+    SendChatMessage("inv", "WHISPER", nil, DB.name)
 end
