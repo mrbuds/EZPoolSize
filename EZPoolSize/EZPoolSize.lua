@@ -22,7 +22,7 @@ function f:ADDON_LOADED(_, loadedAddon)
             self:RegisterEvent("PLAYER_PVP_KILLS_CHANGED")
 
             hooksecurefunc("StaticPopup_Show", function(sType)
-				if sType == "DEATH" then
+                if sType == "DEATH" then
                     C_Timer.After(0.2, function()
                         StaticPopup_OnClick(StaticPopup1, 1)
                     end)
@@ -32,7 +32,7 @@ function f:ADDON_LOADED(_, loadedAddon)
                         StaticPopup_OnClick(StaticPopup1, 1)
                     end)
                 end
-			end)
+            end)
         end
     end
 end
