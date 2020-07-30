@@ -20,19 +20,8 @@ function f:ADDON_LOADED(_, loadedAddon)
             self:RegisterEvent("PLAYER_DEAD")
             self:RegisterEvent("PLAYER_ENTERING_WORLD")
             self:RegisterEvent("PLAYER_PVP_KILLS_CHANGED")
-
-            hooksecurefunc("StaticPopup_Show", function(sType)
-                if sType == "DEATH" then
-                    C_Timer.After(0.2, function()
-                        StaticPopup_OnClick(StaticPopup1, 1)
-                    end)
-                end
-                if sType == "PARTY_INVITE" then
-                    C_Timer.After(0.2, function()
-                        StaticPopup_OnClick(StaticPopup1, 1)
-                    end)
-                end
-            end)
+            self:RegisterEvent("PARTY_INVITE_REQUEST")
+            self:RegisterEvents("PARTY_INVITE_REQUEST", "GROUP_INVITE_CONFIRMATION")
         end
     end
 end
@@ -44,18 +33,13 @@ function f:CINEMATIC_START()
 end
 
 function f:PLAYER_DEAD()
-    C_Timer.After(0.5, function()
-        StaticPopup_OnClick(StaticPopup1, 1)
-    end)
+    RepopMe()
 end
 
 function f:GOSSIP_SHOW()
     SelectGossipOption(1)
     C_Timer.After(0.2, function()
-        StaticPopup_OnClick(StaticPopup1, 1)
-    end)
-    C_Timer.After(0.4, function()
-        StaticPopup_OnClick(StaticPopup1, 1)
+        AcceptXPLoss()
     end)
 end
 
@@ -66,6 +50,44 @@ function f:PLAYER_PVP_KILLS_CHANGED()
         if current and tonumber(current) then
             print(current, "kills")
             now = GetTime()
+            if current >= 15 then
+                LeaveParty()
+            end
+        end
+    end
+end
+
+function f:GROUP_INVITE_CONFIRMATION()
+    local firstInvite = GetNextPendingInviteConfirmation()
+    if not firstInvite then
+        return
+    end
+    local confirmationType, name = GetInviteConfirmationInfo(firstInvite)
+    if name then
+        RespondToInviteConfirmation(firstInvite, true)
+        for i = 1, 4 do
+            local frame = _G["StaticPopup"..i]
+            if frame:IsVisible() and frame.which == "GROUP_INVITE_CONFIRMATION" then
+                StaticPopup_Hide("GROUP_INVITE_CONFIRMATION")
+                UpdateInviteConfirmationDialogs()
+                return
+            end
+        end
+    end
+end
+
+function f:PARTY_INVITE_REQUEST()
+    AcceptGroup()
+    for i = 1, 4 do
+        local frame = _G["StaticPopup"..i]
+        if frame:IsVisible() and frame.which == "PARTY_INVITE" then
+            frame.inviteAccepted = true
+            StaticPopup_Hide("PARTY_INVITE")
+            return
+        elseif frame:IsVisible() and frame.which == "PARTY_INVITE_XREALM" then
+            frame.inviteAccepted = true
+            StaticPopup_Hide("PARTY_INVITE_XREALM")
+            return
         end
     end
 end
@@ -81,7 +103,7 @@ end
 
 _G["SLASH_"..prefix:upper().."1"] = "/pool"
 SlashCmdList[prefix:upper()] = function(input)
-    if not input then
+    if not input or input == "" then
         print(prefix, "usage: /pool <username for invite>")
         return
     end
