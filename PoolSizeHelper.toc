@@ -1,0 +1,9 @@
+## Interface: 11305
+## Title: PoolSizeHelper
+## Author: Buds
+## Version: v0.1
+## DefaultState: Enabled
+## LoadOnDemand: 0
+## SavedVariables: DB
+
+PoolSizeHelper.lua
