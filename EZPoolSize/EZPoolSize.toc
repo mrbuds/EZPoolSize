@@ -1,9 +1,9 @@
 ## Interface: 11305
-## Title: PoolSizeHelper
+## Title: EZPoolSize
 ## Author: Buds
 ## Version: v0.1
 ## DefaultState: Enabled
 ## LoadOnDemand: 0
 ## SavedVariables: DB
 
-PoolSizeHelper.lua
+EZPoolSize.lua
