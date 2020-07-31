@@ -40,6 +40,7 @@ function f:GOSSIP_SHOW()
     SelectGossipOption(1)
     C_Timer.After(0.2, function()
         AcceptXPLoss()
+        self:nextNameDialog()
     end)
 end
 
@@ -52,7 +53,6 @@ function f:PLAYER_PVP_KILLS_CHANGED()
             now = GetTime()
             if current > 15 then
                 LeaveParty()
-                self:nextNameDialog()
             end
         end
     end
