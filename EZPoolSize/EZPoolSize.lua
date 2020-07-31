@@ -21,7 +21,7 @@ function f:ADDON_LOADED(_, loadedAddon)
             self:RegisterEvent("PLAYER_ENTERING_WORLD")
             self:RegisterEvent("PLAYER_PVP_KILLS_CHANGED")
             self:RegisterEvent("PARTY_INVITE_REQUEST")
-            self:RegisterEvents("PARTY_INVITE_REQUEST", "GROUP_INVITE_CONFIRMATION")
+            self:RegisterEvent("GROUP_INVITE_CONFIRMATION")
         end
     end
 end
@@ -50,8 +50,9 @@ function f:PLAYER_PVP_KILLS_CHANGED()
         if current and tonumber(current) then
             print(current, "kills")
             now = GetTime()
-            if current >= 15 then
+            if current > 15 then
                 LeaveParty()
+                self:nextNameDialog()
             end
         end
     end
@@ -110,4 +111,37 @@ SlashCmdList[prefix:upper()] = function(input)
     DB.name = input
     print(prefix, "Auto send 'inv' on", input, "set")
     SendChatMessage("inv", "WHISPER", nil, DB.name)
+end
+
+function f:nextName()
+    local name = UnitName("player"):lower()
+    local lastletter = name:sub(#name)
+    local prevletter = name:sub(#name-1, #name-1)
+
+    local nextletter = {}
+    for i = 1, 25 do
+       nextletter[string.char(i + 97)] = string.char(i + 98)
+    end
+    nextletter["z"] = "a"
+
+    if lastletter < "z" then
+       return name:sub(1, #name-1) .. nextletter[lastletter]
+    else
+       return name:sub(1, #name-2) .. nextletter[prevletter] .. "a"
+    end
+end
+
+function f:nextNameDialog()
+    StaticPopupDialogs["EZPOOLSIZENEXTNAME"] = {
+        text = "Next Character Name",
+        button1 = "Ok",
+        timeout = 0,
+        hasEditBox = true,
+        hideOnEscape = true,
+        OnShow = function (self, data)
+            self.editBox:SetText(f:nextName())
+            self.editBox:HighlightText()
+        end,
+      }
+      StaticPopup_Show("EZPOOLSIZENEXTNAME")
 end
