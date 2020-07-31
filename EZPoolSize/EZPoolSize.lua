@@ -40,7 +40,7 @@ function f:GOSSIP_SHOW()
     SelectGossipOption(1)
     C_Timer.After(0.2, function()
         AcceptXPLoss()
-        self:nextNameDialog()
+        f:nextNameDialog()
     end)
 end
 
