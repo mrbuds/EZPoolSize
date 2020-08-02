@@ -50,7 +50,13 @@ function f:PLAYER_PVP_KILLS_CHANGED()
         if current and tonumber(current) then
             print(current, "kills")
             now = GetTime()
-            if current > 15 then
+            if current >= 15 then
+                for i = 1, 4 do
+                    local frame = _G["StaticPopup"..i]
+                    if frame:IsVisible() and frame.which == "CAMP" then
+                        return -- don't leave party if logging out
+                    end
+                end
                 LeaveParty()
             elseif current == 1 then
                 f:nextNameDialog()
@@ -142,6 +148,7 @@ function f:nextNameDialog()
         OnShow = function (self, data)
             self.editBox:SetText(f:nextName())
             self.editBox:HighlightText()
+            --self.editBox:Disable()
         end,
       }
       StaticPopup_Show("EZPOOLSIZENEXTNAME")
