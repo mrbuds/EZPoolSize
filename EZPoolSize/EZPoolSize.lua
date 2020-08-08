@@ -155,7 +155,7 @@ function f:nextNameDialog()
             --self.editBox:Disable()
         end,
         OnHide = function()
-            print("Show next name with command \"/name\"")
+            print("Next name is ".. f:nextName()..", type /name to re-open dialog.")
         end
       }
       StaticPopup_Show("EZPOOLSIZENEXTNAME")
