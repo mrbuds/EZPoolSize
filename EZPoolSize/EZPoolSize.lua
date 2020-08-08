@@ -119,6 +119,10 @@ SlashCmdList[prefix:upper()] = function(input)
     print(prefix, "Auto send 'inv' on", input, "set")
     SendChatMessage("inv", "WHISPER", nil, DB.name)
 end
+_G["SLASH_"..prefix:upper().."NAME1"] = "/name"
+SlashCmdList[prefix:upper().."NAME"] = function()
+    f:nextNameDialog()
+end
 
 function f:nextName()
     local name = UnitName("player"):lower()
@@ -150,6 +154,9 @@ function f:nextNameDialog()
             self.editBox:HighlightText()
             --self.editBox:Disable()
         end,
+        OnHide = function()
+            print("Show next name with command \"/name\"")
+        end
       }
       StaticPopup_Show("EZPOOLSIZENEXTNAME")
 end
