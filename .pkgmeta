@@ -1,0 +1,7 @@
+package-as: EZPoolSize
+
+ignore:
+  - README.md
+
+move-folders:
+  EZPoolSize/EZPoolSize: EZPoolSize
