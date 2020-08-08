@@ -1,7 +1,8 @@
 ## Interface: 11305
 ## Title: EZPoolSize
+## X-Curse-Project-ID: 401033
 ## Author: Buds
-## Version: v0.1
+## Version: 1.0
 ## DefaultState: Enabled
 ## LoadOnDemand: 0
 ## SavedVariables: DB
