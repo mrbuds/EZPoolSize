@@ -5,6 +5,7 @@
 - Auto accept group invite
 - Auto release from death
 - Auto accept resurection
+- Generate copy pastable name of your next character
 - Active for level 1 characters only
 
 ## Usage
