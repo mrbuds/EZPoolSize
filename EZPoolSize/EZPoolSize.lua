@@ -130,7 +130,7 @@ function f:nextName()
     local prevletter = name:sub(#name-1, #name-1)
 
     local nextletter = {}
-    for i = 1, 25 do
+    for i = 0, 24 do
        nextletter[string.char(i + 97)] = string.char(i + 98)
     end
     nextletter["z"] = "a"
