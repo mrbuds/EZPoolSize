@@ -135,6 +135,9 @@ function f:nextName()
     end
     nextletter["z"] = "a"
 
+    if prevletter == "g" and lastletter == "l" then -- no name finishing by GM
+        return name:sub(1, #name-2) .. "gn"
+    end
     if lastletter < "z" then
        return name:sub(1, #name-1) .. nextletter[lastletter]
     else
