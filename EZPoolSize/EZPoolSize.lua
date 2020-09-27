@@ -33,6 +33,9 @@ function f:CINEMATIC_START()
 end
 
 function f:PLAYER_DEAD()
+    if self:IsEventRegistered("AUTOFOLLOW_BEGIN") then
+        self:UnregisterEvent("AUTOFOLLOW_BEGIN")
+    end
     RepopMe()
 end
 
@@ -41,6 +44,10 @@ function f:GOSSIP_SHOW()
     C_Timer.After(0.2, function()
         AcceptXPLoss()
     end)
+end
+
+function f:AUTOFOLLOW_BEGIN()
+    self:UnregisterEvent("AUTOFOLLOW_BEGIN")
 end
 
 local now
@@ -107,8 +114,14 @@ function f:PLAYER_ENTERING_WORLD()
         print(prefix, "Type /pool <username for invite>")
     end
     SetPVP(1)
+    if DB.followname then
+        print(prefix, "Auto follow on", DB.followname)
+        self:RegisterEvent("AUTOFOLLOW_BEGIN")
+        f:autofollowLoop()
+    end
 end
 
+-- auto send for invite command
 _G["SLASH_"..prefix:upper().."1"] = "/pool"
 SlashCmdList[prefix:upper()] = function(input)
     if not input or input == "" then
@@ -119,6 +132,8 @@ SlashCmdList[prefix:upper()] = function(input)
     print(prefix, "Auto send 'inv' on", input, "set")
     SendChatMessage("inv", "WHISPER", nil, DB.name)
 end
+
+-- show next name dialog command
 _G["SLASH_"..prefix:upper().."NAME1"] = "/name"
 SlashCmdList[prefix:upper().."NAME"] = function()
     f:nextNameDialog()
@@ -162,4 +177,24 @@ function f:nextNameDialog()
         end
       }
       StaticPopup_Show("EZPOOLSIZENEXTNAME")
+end
+
+-- auto follow command
+_G["SLASH_"..prefix:upper().."2"] = "/autofollow"
+SlashCmdList[prefix:upper()] = function(input)
+    if not input or input == "" then
+        print(prefix, "usage: /autofollow <name>")
+        return
+    end
+    DB.followname = input
+    print(prefix, "Auto follow on", input, "set")
+    f:RegisterEvent("AUTOFOLLOW_BEGIN")
+    f:autofollowLoop()
+end
+
+function f:autofollowLoop()
+    if f:IsEventRegistered("AUTOFOLLOW_BEGIN") then
+        FollowUnit(DB.followname)
+        C_Timer.After(3, f.autofollowLoop)
+    end
 end
