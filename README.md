@@ -3,6 +3,7 @@
 - Skip character creation cinematic
 - Auto send "inv" to raid leader
 - Auto accept group invite
+- Auto follow at start
 - Auto release from death
 - Auto accept resurection
 - Generate copy pastable name of your next character
@@ -10,4 +11,6 @@
 
 ## Usage
 
-Type /pool \<username for invite\>
+Type
+/pool \<username for invite\>
+/autofollow \<name\>
