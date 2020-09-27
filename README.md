@@ -11,6 +11,6 @@
 
 ## Usage
 
-Type
 /pool \<username for invite\>
+
 /autofollow \<name\>
