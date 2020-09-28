@@ -61,7 +61,7 @@ function f:PLAYER_PVP_KILLS_CHANGED()
                 for i = 1, 4 do
                     local frame = _G["StaticPopup"..i]
                     if frame:IsVisible() and frame.which == "CAMP" then
-                        return -- don't leave party if logging out
+                        -- return -- don't leave party if logging out
                     end
                 end
                 LeaveParty()
