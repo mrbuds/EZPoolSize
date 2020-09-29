@@ -180,8 +180,8 @@ function f:nextNameDialog()
 end
 
 -- auto follow command
-_G["SLASH_"..prefix:upper().."2"] = "/autofollow"
-SlashCmdList[prefix:upper()] = function(input)
+_G["SLASH_"..prefix:upper().."FOLLOW1"] = "/autofollow"
+SlashCmdList[prefix:upper().."FOLLOW"] = function(input)
     if not input or input == "" then
         print(prefix, "usage: /autofollow <name>")
         return
