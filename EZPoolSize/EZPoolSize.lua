@@ -8,6 +8,34 @@ end)
 
 f:RegisterEvent("ADDON_LOADED")
 
+local function newButton(name)
+    local button = CreateFrame("Button", name, UIParent, "InsecureActionButtonTemplate")
+    button:SetAttribute('type', 'macro');
+    button:SetWidth(150)
+    button:SetHeight(20)
+    button:SetNormalFontObject("GameFontNormal")
+
+    local ntex = button:CreateTexture()
+    ntex:SetTexture("Interface/Buttons/UI-Panel-Button-Up")
+    ntex:SetTexCoord(0, 0.625, 0, 0.6875)
+    ntex:SetAllPoints()
+    button:SetNormalTexture(ntex)
+
+    local htex = button:CreateTexture()
+    htex:SetTexture("Interface/Buttons/UI-Panel-Button-Highlight")
+    htex:SetTexCoord(0, 0.625, 0, 0.6875)
+    htex:SetAllPoints()
+    button:SetHighlightTexture(htex)
+
+    local ptex = button:CreateTexture()
+    ptex:SetTexture("Interface/Buttons/UI-Panel-Button-Down")
+    ptex:SetTexCoord(0, 0.625, 0, 0.6875)
+    ptex:SetAllPoints()
+    button:SetPushedTexture(ptex)
+
+    return button
+end
+
 function f:ADDON_LOADED(_, loadedAddon)
     if loadedAddon == addonName then
         self:UnregisterEvent("ADDON_LOADED")
@@ -22,6 +50,20 @@ function f:ADDON_LOADED(_, loadedAddon)
             self:RegisterEvent("PLAYER_PVP_KILLS_CHANGED")
             self:RegisterEvent("PARTY_INVITE_REQUEST")
             self:RegisterEvent("GROUP_INVITE_CONFIRMATION")
+
+            local button = newButton("LogoutButton")
+            button:SetPoint("TOP", UIParent, "TOP", 0, -15)
+            button:SetText("1: Logout")
+            button:SetAttribute('macrotext', '/camp');
+            SetOverrideBindingClick(self, true, "1", "LogoutButton")
+
+            if UnitFactionGroup("player") == "Alliance" then
+                local button2 = newButton("StuckButton")
+                button2:SetPoint("TOP", UIParent, "TOP", 0, -40)
+                button2:SetText("2: Character Unstuck")
+                button2:SetAttribute('macrotext', '/click HelpFrameCharacterStuckStuck')
+                SetOverrideBindingClick(self, true, "2", "StuckButton")
+            end
         end
     end
 end
