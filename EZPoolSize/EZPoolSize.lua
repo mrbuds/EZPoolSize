@@ -119,6 +119,16 @@ function f:PLAYER_ENTERING_WORLD()
         self:RegisterEvent("AUTOFOLLOW_BEGIN")
         f:autofollowLoop()
     end
+    if UnitFactionGroup("player") == "Alliance" and UnitLevel("player") == 1 then
+        for bag = 0, 4 do
+            for slot = 1, GetContainerNumSlots(bag) do
+                if GetContainerItemID(bag, slot) == 6948 then -- Healthstone
+                    PickupContainerItem(bag,slot)
+                    DeleteCursorItem()
+                end
+            end
+        end
+    end
 end
 
 -- auto send for invite command
