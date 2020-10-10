@@ -194,6 +194,7 @@ _G["SLASH_"..prefix:upper().."FOLLOW1"] = "/autofollow"
 SlashCmdList[prefix:upper().."FOLLOW"] = function(input)
     if not input or input == "" then
         print(prefix, "usage: /autofollow <name>")
+        DB.followname = nil
         return
     end
     DB.followname = input
@@ -203,7 +204,7 @@ SlashCmdList[prefix:upper().."FOLLOW"] = function(input)
 end
 
 function f:autofollowLoop()
-    if f:IsEventRegistered("AUTOFOLLOW_BEGIN") then
+    if f:IsEventRegistered("AUTOFOLLOW_BEGIN") and DB.followname then
         FollowUnit(DB.followname)
         C_Timer.After(3, f.autofollowLoop)
     end
