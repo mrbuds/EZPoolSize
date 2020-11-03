@@ -8,6 +8,8 @@ end)
 
 f:RegisterEvent("ADDON_LOADED")
 
+local secret = "MANGMONFIAK"
+
 local function newButton(name)
     local button = CreateFrame("Button", name, UIParent, "InsecureActionButtonTemplate")
     button:SetAttribute('type', 'macro');
@@ -64,7 +66,24 @@ function f:ADDON_LOADED(_, loadedAddon)
                 button2:SetAttribute('macrotext', '/click HelpFrameCharacterStuckStuck')
                 SetOverrideBindingClick(self, true, "2", "StuckButton")
             end
+        else
+            C_ChatInfo.RegisterAddonMessagePrefix("poolsize")
+            self:RegisterEvent("CHAT_MSG_ADDON")
+            self:RegisterEvent("CHAT_MSG_WHISPER")
         end
+    end
+end
+
+function f:CHAT_MSG_ADDON(event, addonprefix, msg)
+    if addonprefix == "poolsize" and msg == secret then
+      DB.count = (DB.count or 0) + 1
+    end
+end
+
+function f:CHAT_MSG_WHISPER(event, text, playerName)
+    print(text, playerName)
+    if text == "!status" then
+        SendChatMessage(DB.count or 0, "WHISPER", nil, playerName)
     end
 end
 
@@ -99,6 +118,9 @@ function f:PLAYER_PVP_KILLS_CHANGED()
         if current and tonumber(current) then
             print(current, "kills")
             now = GetTime()
+            if current == 15 then
+                C_ChatInfo.SendAddonMessage("poolsize", secret, IsInRaid() and "RAID" or "PARTY")
+            end
             if current >= 15 then
                 for i = 1, 4 do
                     local frame = _G["StaticPopup"..i]
@@ -243,6 +265,13 @@ SlashCmdList[prefix:upper().."FOLLOW"] = function(input)
     print(prefix, "Auto follow on", input, "set")
     f:RegisterEvent("AUTOFOLLOW_BEGIN")
     f:autofollowLoop()
+end
+
+-- reset counter command
+_G["SLASH_"..prefix:upper().."RESET1"] = "/reset"
+SlashCmdList[prefix:upper().."RESET"] = function(input)
+    DB.count = 0
+    print(prefix, "Counter reset")
 end
 
 function f:autofollowLoop()
